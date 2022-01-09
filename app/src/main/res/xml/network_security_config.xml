@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<netwrok-security-config>
-    <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">13.124.101.242</domain>
-    </domain-config>
-</netwrok-security-config>

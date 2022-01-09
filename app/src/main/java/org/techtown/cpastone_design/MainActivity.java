@@ -1,6 +1,7 @@
 package org.techtown.cpastone_design;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -15,6 +16,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     TextView textView;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +39,28 @@ public class MainActivity extends AppCompatActivity {
 
         textView = (TextView)findViewById(R.id.textView);
 
-
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
+
+        button = (Button) findViewById(R.id.testButton);
+        button.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                try {
+                    sendRequest();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendRequest() throws IOException {
+        Api test = new Api();
+        test.start("https://hotelsanantonio.com.mx/open/FBG");
     }
 
     private void processIntent(Intent intent){
