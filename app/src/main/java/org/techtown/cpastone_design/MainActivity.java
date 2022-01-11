@@ -3,8 +3,12 @@ package org.techtown.cpastone_design;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,11 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +36,13 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.RECEIVE_SMS,
     };
 
+
     TextView textView;
     Button button;
+  
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANEL_NAME = "Channel1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,32 +50,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textView = (TextView)findViewById(R.id.textView);
+        button = (Button)findViewById(R.id.button);
+
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
 
-        button = (Button) findViewById(R.id.testButton);
-        button.setOnClickListener(new View.OnClickListener(){
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                try {
-                    sendRequest();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void sendRequest() throws IOException {
-        Api test = new Api();
-        test.start("https://hotelsanantonio.com.mx/open/FBG");
-    }
 
     private void processIntent(Intent intent){
+
         if(intent != null){
             // null 예외처리 해야 동작하는듯
             String string = intent.getStringExtra("string");
@@ -72,7 +70,15 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Log.d("receive data", string);
-                textView.setText(string);
+                String url = checkUrl(string);
+                if(url.isEmpty()){
+                    textView.setText("No url");
+                }
+                else{
+                    textView.setText(url);
+                }
+
+
             }
 
         }
@@ -125,5 +131,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    // url 정규식
+    // http 랑 www 없이 성공함!
+    public static String checkUrl(String content){
+        try {
+            String REGEX = "^*((http|https)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?";
+            Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(content);
+            if (m.find()) {
+                return m.group();
+            }
+            return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
 
 }
