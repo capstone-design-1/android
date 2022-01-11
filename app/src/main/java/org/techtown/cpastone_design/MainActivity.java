@@ -1,6 +1,7 @@
 package org.techtown.cpastone_design;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
@@ -18,7 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     Button button;
-
+  
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
 
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         textView = (TextView)findViewById(R.id.textView);
         button = (Button)findViewById(R.id.button);
-
 
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
