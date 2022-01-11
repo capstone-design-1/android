@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
 
+    Api api = new Api();
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
-        processIntent(passedIntent);
+        try {
+            processIntent(passedIntent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
-    private void processIntent(Intent intent){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void processIntent(Intent intent) throws IOException {
 
         if(intent != null){
             // null 예외처리 해야 동작하는듯
@@ -65,11 +75,20 @@ public class MainActivity extends AppCompatActivity {
             else{
                 Log.d("receive data", string);
                 String url = checkUrl(string);
+                Log.d("URL", url);
                 if(url.isEmpty()){
                     textView.setText("No url");
                 }
                 else{
-                    textView.setText(url);
+                    String res;
+                    if(url.startsWith("http") || url.startsWith("https")){
+                        res = api.start(url);
+                    }
+                    else{
+                        res = api.start("http://"+url);
+                    }
+
+                    textView.setText(res);
                 }
 
 
@@ -80,9 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
     // (2) 이미 실행된 상태였는데 리시버에 의해 다시 켜진 경우
     // (이러한 경우 onCreate()를 거치지 않기 때문에 이렇게 오버라이드 해주어야 모든 경우에 SMS문자가 처리된다!
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onNewIntent(Intent intent) {
-        processIntent(intent);
+        try {
+            processIntent(intent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         super.onNewIntent(intent);
     }

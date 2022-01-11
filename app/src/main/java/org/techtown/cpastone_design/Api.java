@@ -4,14 +4,6 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,7 +18,7 @@ import java.util.Map;
 public class Api {
     // main function
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void start(String search_url) throws IOException {
+    public String start(String search_url) throws IOException {
         String API_URL = "http://13.124.101.242:8080/api/report/all?url=";
         String encode_search_url = Base64.getUrlEncoder().encodeToString(search_url.getBytes());
         String request_url = API_URL + encode_search_url;
@@ -40,6 +32,8 @@ public class Api {
                 }
             }
         }.start();
+
+        return "끝";
     }
 
     public void getData(String request_url) throws IOException {
