@@ -42,9 +42,6 @@ public class Api {
     }
 
     public JSONObject getData(String request_url) throws IOException, JSONException {
-        // TODO
-        // Timeout 예외처리
-        
         URL obj = new URL(request_url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -71,7 +68,12 @@ public class Api {
         }
         else{
             System.out.println("[!] api server down.");
-            return null;
+
+            JSONObject return_data = new JSONObject();
+            return_data.put("error", "api server down");
+            return_data.put("status_code", response_code);
+
+            return return_data;
         }
     }
 }
