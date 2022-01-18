@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("No url");
                 }
                 else{
-                    JSONObject res;
+                    JSONObject res = new JSONObject();
                     for(int i=0; i < url.size() ; i++){
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
@@ -167,15 +167,15 @@ public class MainActivity extends AppCompatActivity {
             Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
             List<String> list = new ArrayList<>();
 
-            for(int i =0; i < content_arr.length ; i++){
-                Matcher m = p.matcher(content_arr[i]);
-                if(m.find()){
-                    list.add(m.group());
-                }
+            Matcher m = p.matcher(content);
+            while(m.find()){
+                list.add(m.group());
             }
+
             return list;
         } catch (Exception e) {
             List<String> no = new ArrayList<>();
+            System.out.println(e.toString());
             return no;
         }
     }
