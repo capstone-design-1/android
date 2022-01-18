@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
         try {
             processIntent(passedIntent);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void processIntent(Intent intent) throws IOException {
+    private void processIntent(Intent intent) throws IOException, InterruptedException {
 
         if(intent != null){
             // null 예외처리 해야 동작하는듯
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("No url");
                 }
                 else{
-                    String res;
+                    JSONObject res;
                     for(int i=0; i < url.size() ; i++){
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
@@ -95,10 +97,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    //textView.setText();
+                    textView.setText(res.toString());
                 }
-
-
             }
 
         }
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         try {
             processIntent(intent);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
