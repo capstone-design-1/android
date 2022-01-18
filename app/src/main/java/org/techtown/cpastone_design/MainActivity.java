@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
         try {
             processIntent(passedIntent);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void processIntent(Intent intent) throws IOException {
+    private void processIntent(Intent intent) throws IOException, InterruptedException {
 
         if(intent != null){
             // null 예외처리 해야 동작하는듯
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("No url");
                 }
                 else{
-                    String res;
+                    JSONObject res;
                     if(url.startsWith("http") || url.startsWith("https")){
                         res = api.start(url);
                     }
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         res = api.start("http://"+url);
                     }
 
-                    textView.setText(res);
+                    textView.setText(res.toString());
                 }
 
 
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         try {
             processIntent(intent);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
