@@ -21,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,21 +77,25 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Log.d("receive data", string);
-                String url = checkUrl(string);
-                Log.d("URL", url);
+                List<String> url = checkUrl(string);
+
                 if(url.isEmpty()){
                     textView.setText("No url");
                 }
                 else{
                     String res;
-                    if(url.startsWith("http") || url.startsWith("https")){
-                        res = api.start(url);
-                    }
-                    else{
-                        res = api.start("http://"+url);
+                    for(int i=0; i < url.size() ; i++){
+                        String temp = url.get(i);
+                        Log.d("TEMP", temp);
+                        if(temp.startsWith("http") || temp.startsWith("https")){
+                            res = api.start(temp);
+                        }
+                        else{
+                            res = api.start("http://"+url);
+                        }
                     }
 
-                    textView.setText(res);
+                    //textView.setText();
                 }
 
 
@@ -152,17 +159,24 @@ public class MainActivity extends AppCompatActivity {
 
     // url 정규식
     // http 랑 www 없이 성공함!
-    public static String checkUrl(String content){
+    public static List<String> checkUrl(String content){
         try {
+            String[] content_arr = content.split(" ");
+
             String REGEX = "^*((http|https)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?";
             Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
-            Matcher m = p.matcher(content);
-            if (m.find()) {
-                return m.group();
+            List<String> list = new ArrayList<>();
+
+            for(int i =0; i < content_arr.length ; i++){
+                Matcher m = p.matcher(content_arr[i]);
+                if(m.find()){
+                    list.add(m.group());
+                }
             }
-            return "";
+            return list;
         } catch (Exception e) {
-            return "";
+            List<String> no = new ArrayList<>();
+            return no;
         }
     }
 
