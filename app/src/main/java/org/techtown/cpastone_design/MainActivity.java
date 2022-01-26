@@ -31,6 +31,10 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static String CHANNEL_ID = "channel1";
+    private NotificationManager notificationManager;
+    private static int NOTIFICATION_ID = 0;
+
 
     // 권한 리스트 (일단 문자만)
     String[] permission_list = {
@@ -40,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     Button button;
-  
-    private static String CHANNEL_ID = "channel1";
-    private static String CHANEL_NAME = "Channel1";
+
 
     Api api = new Api();
 
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        checkPermission();
 
         textView = (TextView)findViewById(R.id.textView);
         button = (Button)findViewById(R.id.button);
@@ -93,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                             res = api.start(temp);
                         }
                         else{
-                            res = api.start("http://"+url);
+                            res = api.start("http://"+temp);
                         }
                     }
 
