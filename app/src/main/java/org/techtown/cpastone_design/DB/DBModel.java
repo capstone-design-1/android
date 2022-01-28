@@ -21,7 +21,7 @@ public class DBModel extends SQLiteOpenHelper {
                 "previous_url TEXT," +
                 "destination_url TEXT," +
                 "count INTEGER," +
-                "date DATE," +
+                "date TEXT," +
                 "malicious INTEGER," +
                 "site_image TEXT)";
 
