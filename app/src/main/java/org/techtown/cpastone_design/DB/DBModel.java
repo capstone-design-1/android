@@ -17,15 +17,43 @@ public class DBModel extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String url_info_table_query = "CREATE TABLE url_info (" +
-                "url_id INTEGER PRIMARY KEY, " +
+                "url_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "previous_url TEXT," +
                 "destination_url TEXT," +
                 "count INTEGER," +
                 "date TEXT," +
                 "malicious INTEGER," +
                 "site_image TEXT)";
+        
+        String virustotal_info_table_query = "CREATE TABLE virustotal_info (" +
+                "v_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "url_id INTEGER," +
+                "detail TEXT," +
+                "FOREIGN KEY(url_id) REFERENCES url_info(url_id))";
+
+        String malwares_info_table_query = "CREATE TABLE malwares_info (" +
+                "m_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "url_id INTEGER," +
+                "detail TEXT," +
+                "FOREIGN KEY(url_id) REFERENCES url_info(url_id))";
+
+        String google_info_table_query = "CREATE TABLE google_info (" +
+                "g_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "url_id INTEGER," +
+                "detail TEXT," +
+                "FOREIGN KEY(url_id) REFERENCES url_info(url_id))";
+
+        String phishtank_info_table_query = "CREATE TABLE phishtank_info (" +
+                "p_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "url_id INTEGER," +
+                "detail TEXT," +
+                "FOREIGN KEY(url_id) REFERENCES url_info(url_id))";
 
         db.execSQL(url_info_table_query);
+        db.execSQL(virustotal_info_table_query);
+        db.execSQL(malwares_info_table_query);
+        db.execSQL(google_info_table_query);
+        db.execSQL(phishtank_info_table_query);
     }
 
     @Override
