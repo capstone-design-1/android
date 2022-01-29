@@ -86,19 +86,16 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("No url");
                 }
                 else{
-                    JSONObject res = new JSONObject();
                     for(int i=0; i < url.size() ; i++){
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            res = api.start(temp, this);
+                            api.start(temp, this);
                         }
                         else{
-                            res = api.start("http://"+url, this);
+                            api.start("http://"+url, this);
                         }
                     }
-
-                    textView.setText(res.toString());
                 }
             }
 
