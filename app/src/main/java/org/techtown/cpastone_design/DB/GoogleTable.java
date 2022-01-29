@@ -16,7 +16,7 @@ public class GoogleTable extends DBModel{
     }
 
     public void insert(String detail, int url_id){
-        String query = String.format("INSERT INTO %s (detail, url_id) VALUES ('%s', %d)",TABLE_NAME, url_id);
+        String query = String.format("INSERT INTO %s (detail, url_id) VALUES ('%s', %d)",TABLE_NAME, detail, url_id);
         db.execSQL(query);
     }
 

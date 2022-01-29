@@ -25,21 +25,35 @@ public class UrlTable extends DBModel{
 
     public ArrayList<UrlTableList> select(){
         Cursor url_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
+        ArrayList<UrlTableList> return_data = makeUrlTableList(url_table_cursor);
+
+        url_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<UrlTableList> selectURL(String url){
+        Cursor url_table_cursor = db.rawQuery(String.format("SELECT * FROM %s WHERE previous_url='%s'", TABLE_NAME, url), null);
+        ArrayList<UrlTableList> return_data = makeUrlTableList(url_table_cursor);
+
+        url_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<UrlTableList> makeUrlTableList(Cursor url_table_cursor){
         ArrayList<UrlTableList> return_data = new ArrayList<>();
 
         if(url_table_cursor.moveToFirst()){
             do{
                 return_data.add(new UrlTableList(url_table_cursor.getInt(0),
-                                                url_table_cursor.getString(1),
-                                                url_table_cursor.getString(2),
-                                                url_table_cursor.getInt(3),
-                                                url_table_cursor.getString(4),
-                                                url_table_cursor.getInt(5),
-                                                url_table_cursor.getString(6)));
+                        url_table_cursor.getString(1),
+                        url_table_cursor.getString(2),
+                        url_table_cursor.getInt(3),
+                        url_table_cursor.getString(4),
+                        url_table_cursor.getInt(5),
+                        url_table_cursor.getString(6)));
             } while(url_table_cursor.moveToNext());
         }
 
-        url_table_cursor.close();
         return return_data;
     }
 }
