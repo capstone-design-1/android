@@ -21,8 +21,23 @@ public class VirustotalTable extends DBModel{
         db.execSQL(query);
     }
 
-    public ArrayList<VirustotalTableList> select(){
+    public ArrayList<VirustotalTableList> selectAll(){
         Cursor virustotal_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
+        ArrayList<VirustotalTableList> return_data = makeVirustotalTableList(virustotal_table_cursor);
+
+        virustotal_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<VirustotalTableList> selectMaliciousSite(int url_id){
+        Cursor virustotal_table_cursor = db.rawQuery(String.format("SELECT * FROM %s WHERE url_id=%d", TABLE_NAME, url_id), null);
+        ArrayList<VirustotalTableList> return_data = makeVirustotalTableList(virustotal_table_cursor);
+
+        virustotal_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<VirustotalTableList> makeVirustotalTableList(Cursor virustotal_table_cursor){
         ArrayList<VirustotalTableList> return_data = new ArrayList<>();
 
         if(virustotal_table_cursor.moveToFirst()){
@@ -33,7 +48,6 @@ public class VirustotalTable extends DBModel{
             } while(virustotal_table_cursor.moveToNext());
         }
 
-        virustotal_table_cursor.close();
         return return_data;
     }
 }

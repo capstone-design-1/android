@@ -20,8 +20,23 @@ public class GoogleTable extends DBModel{
         db.execSQL(query);
     }
 
-    public ArrayList<GoogleTableList> select(){
+    public ArrayList<GoogleTableList> selectMaliciousSite(int url_id){
+        Cursor google_table_cursor = db.rawQuery(String.format("SELECT * FROM %s WHERE url_id=%d", TABLE_NAME, url_id), null);
+        ArrayList<GoogleTableList> return_data = makeGoogleTableList(google_table_cursor);
+
+        google_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<GoogleTableList> selectAll(){
         Cursor google_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
+        ArrayList<GoogleTableList> return_data = makeGoogleTableList(google_table_cursor);
+
+        google_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<GoogleTableList> makeGoogleTableList(Cursor google_table_cursor){
         ArrayList<GoogleTableList> return_data = new ArrayList<>();
 
         if(google_table_cursor.moveToFirst()){
@@ -32,7 +47,6 @@ public class GoogleTable extends DBModel{
             } while(google_table_cursor.moveToNext());
         }
 
-        google_table_cursor.close();
         return return_data;
     }
 }

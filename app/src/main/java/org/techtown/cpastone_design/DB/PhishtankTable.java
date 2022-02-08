@@ -20,8 +20,23 @@ public class PhishtankTable extends DBModel{
         db.execSQL(query);
     }
 
-    public ArrayList<PhishtankTableList> select(){
+    public ArrayList<PhishtankTableList> selectAll(){
         Cursor phishtank_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
+        ArrayList<PhishtankTableList> return_data = makePhishTankList(phishtank_table_cursor);
+
+        phishtank_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<PhishtankTableList> selectMaliciousSite(int url_id){
+        Cursor phishtank_table_cursor = db.rawQuery(String.format("SELECT * FROM %s WHERE url_id=%d", TABLE_NAME, url_id), null);
+        ArrayList<PhishtankTableList> return_data = makePhishTankList(phishtank_table_cursor);
+
+        phishtank_table_cursor.close();
+        return return_data;
+    }
+
+    public ArrayList<PhishtankTableList> makePhishTankList(Cursor phishtank_table_cursor){
         ArrayList<PhishtankTableList> return_data = new ArrayList<>();
 
         if(phishtank_table_cursor.moveToFirst()){
@@ -32,7 +47,6 @@ public class PhishtankTable extends DBModel{
             } while(phishtank_table_cursor.moveToNext());
         }
 
-        phishtank_table_cursor.close();
         return return_data;
     }
 }
