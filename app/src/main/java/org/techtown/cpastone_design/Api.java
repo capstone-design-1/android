@@ -27,7 +27,7 @@ public class Api {
 
     // main function
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void start(String search_url, Context context) throws IOException, InterruptedException, JSONException {
+    public JSONObject start(String search_url, Context context) throws IOException, InterruptedException, JSONException {
 
         String API_URL = "http://13.124.101.242:8080/api/report/all?url=";
         String encode_search_url = Base64.getUrlEncoder().encodeToString(search_url.getBytes());
@@ -55,6 +55,8 @@ public class Api {
                 saveData(response_json[0], context);
             }
         }
+
+        return response_json[0];
     }
 
     public JSONObject getData(String request_url) throws IOException, JSONException {
