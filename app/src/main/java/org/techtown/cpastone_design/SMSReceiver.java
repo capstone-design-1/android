@@ -59,8 +59,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
              */
 
-            //showNoti(context, contents);
-            sendNotification(context);
+            sendNotification(context, contents);
             sendToActivity(context, contents);
 
         }
@@ -93,32 +92,6 @@ public class SMSReceiver extends BroadcastReceiver {
         return messages;
     }
 
-    public void showNoti(Context context, String string){
-
-        NotificationCompat.Builder builder = null;
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("string", string);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        }else {
-            builder = new NotificationCompat.Builder(context);
-        }
-
-        builder.setContentTitle("sms_app")
-                .setContentText("")
-                .setSmallIcon(R.drawable.alert)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-
-        Notification notification = builder.build();
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(1, notification);
-    }
-
-
 
     //채널을 만드는 메소드
     public void createNotificationChannel(Context context) {
@@ -142,13 +115,14 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     // Notification Builder를 만드는 메소드
-    private NotificationCompat.Builder getNotificationBuilder(Context context) {
+    private NotificationCompat.Builder getNotificationBuilder(Context context, String str) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("string",str);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("문자에서 URL이 발견되었습니다.")
-                //.setContentText("This is your notification text.")
+                .setContentTitle("url_link")
+                .setContentText("악성 URL이 탐지 되었습니다.")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.alert);
@@ -156,9 +130,9 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     // Notification을 보내는 메소드
-    public void sendNotification(Context context) {
+    public void sendNotification(Context context, String str) {
         // Builder 생성
-        NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context);
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context,str);
         // Manager를 통해 notification 디바이스로 전달
         notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
