@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
-
+        JSONObject res = null;
         if(intent != null){
             // null 예외처리 해야 동작하는듯
             String string = intent.getStringExtra("string");
@@ -137,14 +137,15 @@ public class MainActivity extends AppCompatActivity {
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            api.start(temp, this);
+                            res = api.start(temp, this);
                         }
                         else{
-                            api.start("http://"+url, this);
+                            res = api.start("http://"+temp, this);
                         }
                     }
 
-                    createTextView(res.toString());
+                    createTextView(res.getString("detail"));
+                    //res.getInt("is_
 
                 }
             }

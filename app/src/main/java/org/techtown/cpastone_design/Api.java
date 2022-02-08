@@ -48,6 +48,7 @@ public class Api {
         }.start();
         latch.await();
 
+
         if(response_json[0].getInt("status_code") == 200){
             ArrayList<UrlTableList> url_table_list = searchUrl(search_url, context);
 
