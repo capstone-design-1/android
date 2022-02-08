@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -23,14 +24,16 @@ public class SMSReceiver extends BroadcastReceiver {
 
     private static final String TAG = "SmsReceiver";
 
-
+    //mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     private static String CHANNEL_ID = "channel1";
-    private static String CHANEL_NAME = "Channel1";
+    private NotificationManager notificationManager;
+    private static int NOTIFICATION_ID = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // 문자 오면 onReceive() 가 호출이 됨
 
+        createNotificationChannel(context);
         Bundle bundle = intent.getExtras();
 
         // 메소드 밑에 있음
@@ -56,7 +59,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
              */
 
-            showNoti(context, contents);
+            //showNoti(context, contents);
+            sendNotification(context);
             sendToActivity(context, contents);
 
         }
@@ -95,7 +99,6 @@ public class SMSReceiver extends BroadcastReceiver {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("string", string);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         }else {
@@ -115,6 +118,50 @@ public class SMSReceiver extends BroadcastReceiver {
         notificationManager.notify(1, notification);
     }
 
+
+
+    //채널을 만드는 메소드
+    public void createNotificationChannel(Context context) {
+        //notification manager 생성
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // 기기(device)의 SDK 버전 확인 ( SDK 26 버전 이상인지 - VERSION_CODES.O = 26)
+        if (android.os.Build.VERSION.SDK_INT
+                >= android.os.Build.VERSION_CODES.O) {
+            //Channel 정의 생성자( construct 이용 )
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID
+                    , "Test Notification", notificationManager.IMPORTANCE_HIGH);
+            //Channel에 대한 기본 설정
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setDescription("Notification from Mascot");
+            // Manager을 이용하여 Channel 생성
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+    }
+
+    // Notification Builder를 만드는 메소드
+    private NotificationCompat.Builder getNotificationBuilder(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentTitle("문자에서 URL이 발견되었습니다.")
+                //.setContentText("This is your notification text.")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.alert);
+        return notifyBuilder;
+    }
+
+    // Notification을 보내는 메소드
+    public void sendNotification(Context context) {
+        // Builder 생성
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context);
+        // Manager를 통해 notification 디바이스로 전달
+        notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+    }
 
 
 }
