@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
         try {
             processIntent(passedIntent);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void processIntent(Intent intent) throws IOException, InterruptedException {
+    private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
 
         if(intent != null){
             // null 예외처리 해야 동작하는듯
@@ -89,19 +90,16 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("No url");
                 }
                 else{
-                    JSONObject res = new JSONObject();
                     for(int i=0; i < url.size() ; i++){
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            res = api.start(temp);
+                            api.start(temp, this);
                         }
                         else{
-                            res = api.start("http://"+temp);
+                            api.start("http://"+url, this);
                         }
                     }
-
-                    textView.setText(res.toString());
                 }
             }
 
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         try {
             processIntent(intent);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
 
