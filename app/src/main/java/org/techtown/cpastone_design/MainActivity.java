@@ -9,14 +9,22 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static String CHANNEL_ID = "channel1";
     private NotificationManager notificationManager;
     private static int NOTIFICATION_ID = 0;
+    LinearLayout linearLayout;
 
 
     // 권한 리스트 (일단 문자만)
@@ -42,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.RECEIVE_SMS,
     };
 
-
-    TextView textView;
-    Button button;
 
 
     Api api = new Api();
@@ -55,16 +61,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkPermission();
 
-        textView = (TextView)findViewById(R.id.textView);
-        button = (Button)findViewById(R.id.button);
+        linearLayout = findViewById(R.id.linearLayout);
+
 
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         try {
+
             processIntent(passedIntent);
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
@@ -72,6 +78,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createTextView(String string){
+
+        //1. 텍스트뷰 객체생성
+        TextView textView = new TextView(getApplicationContext());
+
+        //2. 텍스트뷰에 들어갈 문자설정
+        textView.setText(string);
+
+        //3. 텍스트뷰 글자크기 설정
+        //textViewNm.setTextSize(12);//텍스트 크기
+
+        //4. 텍스트뷰 글자타입 설정
+        //textViewNm.setTypeface(null, Typeface.BOLD);
+
+        //5. 텍스트뷰 ID설정
+        textView.setId(0);
+
+        //6. 레이아웃 설정
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
+                ,300);
+
+        param.setMargins(30,303,30,30);
+
+        textView.setPadding(10,10,10,10);
+        textView.setBackgroundResource(R.drawable.round);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        }
+
+
+        // 7. 설정한 레이아웃 텍스트뷰에 적용
+        textView.setLayoutParams(param);
+
+        //9. 생성및 설정된 텍스트뷰 레이아웃에 적용
+        linearLayout.addView(textView);
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
@@ -87,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 List<String> url = checkUrl(string);
 
                 if(url.isEmpty()){
-                    textView.setText("No url");
+                    createTextView("NO URL");
                 }
                 else{
                     for(int i=0; i < url.size() ; i++){
@@ -100,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
                             api.start("http://"+url, this);
                         }
                     }
+
+                    createTextView(res.toString());
+
                 }
             }
 
