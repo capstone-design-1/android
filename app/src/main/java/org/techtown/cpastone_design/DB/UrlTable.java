@@ -28,6 +28,11 @@ public class UrlTable extends DBModel{
         db.execSQL(query);
     }
 
+    public void deleteAll(){
+        String query = String.format("DELETE FROM %s", TABLE_NAME);
+        db.execSQL(query);
+    }
+
     public ArrayList<UrlTableList> selectAll(){
         Cursor url_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
         ArrayList<UrlTableList> return_data = makeUrlTableList(url_table_cursor);
