@@ -5,6 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.techtown.cpastone_design.DB.GoogleTable;
@@ -19,15 +20,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 
 public class Api {
 
-    // main function
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void start(String search_url, Context context) throws IOException, InterruptedException, JSONException {
+    public JSONObject getAnalysis(String search_url, Context context) throws IOException, InterruptedException, JSONException {
 
         String API_URL = "http://13.124.101.242:8080/api/report/all?url=";
         String encode_search_url = Base64.getUrlEncoder().encodeToString(search_url.getBytes());
@@ -39,7 +40,37 @@ public class Api {
         new Thread(){
             public void run() {
                 try {
-                    response_json[0] = getData(request_url);
+                    response_json[0] = parseData(request_url);
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+                latch.countDown();
+            }
+        }.start();
+        latch.await();
+
+
+        if(response_json[0].getInt("status_code") == 200){
+            ArrayList<UrlTableList> url_table_list = searchUrl(search_url, context);
+
+            if(url_table_list.size() == 0){
+                saveData(response_json[0], context);
+            }
+        }
+
+        return response_json[0];
+    }
+
+    public boolean syncDB(Context context) throws InterruptedException, JSONException {
+        String API_URL = "http://13.124.101.242:8080/db/sync";
+        final JSONObject[] response_json = new JSONObject[1];
+
+        // Thread return 값을 받기 위한 설정
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Thread(){
+            public void run() {
+                try {
+                    response_json[0] = parseData(API_URL);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
@@ -49,15 +80,39 @@ public class Api {
         latch.await();
 
         if(response_json[0].getInt("status_code") == 200){
-            ArrayList<UrlTableList> url_table_list = searchUrl(search_url, context);
+            UrlTable url_table = new UrlTable(context);
+            GoogleTable google_table = new GoogleTable(context);
+            MalwaresTable malwares_table = new MalwaresTable(context);
+            PhishtankTable phishtank_table = new PhishtankTable(context);
+            VirustotalTable virustotal_table = new VirustotalTable(context);
 
-            if(url_table_list.size() == 0){
-                saveData(response_json[0], context);
+            url_table.deleteAll();
+            google_table.deleteAll();
+            malwares_table.deleteAll();
+            phishtank_table.deleteAll();
+            virustotal_table.deleteAll();
+
+            for(int i=0; i<response_json[0].getInt("count"); i++){
+                JSONObject tmp_url = response_json[0].getJSONArray("url_table").getJSONObject(i);
+                JSONObject tmp_google = response_json[0].getJSONArray("google").getJSONObject(i);
+                JSONObject tmp_malwares = response_json[0].getJSONArray("malwares").getJSONObject(i);
+                JSONObject tmp_phishtank = response_json[0].getJSONArray("phishtank").getJSONObject(i);
+                JSONObject tmp_virustotal = response_json[0].getJSONArray("virustotal").getJSONObject(i);
+
+                url_table.insert(tmp_url.getString("previous_url"), tmp_url.getInt("malicious"), tmp_url.getString("site_image"));
+                google_table.insert(tmp_google.getString("detail"), tmp_google.getInt("url_id"));
+                malwares_table.insert(tmp_malwares.getString("detail"), tmp_malwares.getInt("url_id"));
+                phishtank_table.insert(tmp_phishtank.getString("detail"), tmp_phishtank.getInt("url_id"));
+                virustotal_table.insert(tmp_virustotal.getString("detail"), tmp_virustotal.getInt("url_id"));
             }
+
+            return true;
         }
+
+        return false;
     }
 
-    public JSONObject getData(String request_url) throws IOException, JSONException {
+    public JSONObject parseData(String request_url) throws IOException, JSONException {
         URL obj = new URL(request_url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

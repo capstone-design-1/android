@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         linearLayout = findViewById(R.id.linearLayout);
 
-
-
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         try {
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
-
+        JSONObject res = null;
         if(intent != null){
             // null 예외처리 해야 동작하는듯
             String string = intent.getStringExtra("string");
@@ -137,14 +135,15 @@ public class MainActivity extends AppCompatActivity {
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            api.start(temp, this);
+                            res = api.getAnalysis(temp, this);
                         }
                         else{
-                            api.start("http://"+url, this);
+                            res = api.getAnalysis("http://"+temp, this);
                         }
                     }
 
-                    createTextView(res.toString());
+                    createTextView(res.getString("detail"));
+                    //res.getInt("is_
 
                 }
             }

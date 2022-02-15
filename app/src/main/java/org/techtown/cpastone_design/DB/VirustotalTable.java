@@ -21,6 +21,11 @@ public class VirustotalTable extends DBModel{
         db.execSQL(query);
     }
 
+    public void deleteAll(){
+        String query = String.format("DELETE FROM %s", TABLE_NAME);
+        db.execSQL(query);
+    }
+
     public ArrayList<VirustotalTableList> selectAll(){
         Cursor virustotal_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
         ArrayList<VirustotalTableList> return_data = makeVirustotalTableList(virustotal_table_cursor);

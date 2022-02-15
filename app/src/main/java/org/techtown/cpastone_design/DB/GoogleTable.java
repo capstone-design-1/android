@@ -20,6 +20,11 @@ public class GoogleTable extends DBModel{
         db.execSQL(query);
     }
 
+    public void deleteAll(){
+        String query = String.format("DELETE FROM %s", TABLE_NAME);
+        db.execSQL(query);
+    }
+
     public ArrayList<GoogleTableList> selectMaliciousSite(int url_id){
         Cursor google_table_cursor = db.rawQuery(String.format("SELECT * FROM %s WHERE url_id=%d", TABLE_NAME, url_id), null);
         ArrayList<GoogleTableList> return_data = makeGoogleTableList(google_table_cursor);
