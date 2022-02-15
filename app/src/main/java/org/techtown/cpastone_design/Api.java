@@ -62,7 +62,6 @@ public class Api {
     }
 
     public boolean syncDB(Context context) throws InterruptedException, JSONException {
-        System.out.println("-===========================");
         String API_URL = "http://13.124.101.242:8080/db/sync";
         final JSONObject[] response_json = new JSONObject[1];
 
