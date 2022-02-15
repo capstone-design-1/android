@@ -20,12 +20,12 @@
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="right">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <ImageButton
+            android:id="@+id/syncBtn"
             android:layout_margin="10dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/f5img" />
+            android:background="@drawable/f5img" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

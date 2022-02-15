@@ -71,7 +71,6 @@ public class SMSReceiver extends BroadcastReceiver {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("string", str);
         context.startActivity(intent);
-
     }
 
     // 정형화된 코드라는데 뭔지 모르겠음

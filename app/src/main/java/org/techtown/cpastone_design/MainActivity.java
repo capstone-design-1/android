@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private static int NOTIFICATION_ID = 0;
     RecyclerVierAdapter adapter;
+    Context context = this;
 
     DataMovie data;
 
@@ -77,6 +80,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
+
+        ImageButton btn = (ImageButton) findViewById(R.id.syncBtn);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                try {
+                    boolean result = api.syncDB(context);
+                    if(result == true){
+                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 성공했습니다.", Toast.LENGTH_SHORT);
+                        myToast.show();
+                    }else{
+                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 실패했습니다.", Toast.LENGTH_SHORT);
+                        myToast.show();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
     }
 
