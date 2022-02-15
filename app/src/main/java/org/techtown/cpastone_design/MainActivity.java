@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         try {
@@ -156,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            res = api.start(temp, this);
+                            res = api.getAnalysis(temp, this);
                         }
                         else{
-                            res = api.start("http://"+temp, this);
+                            res = api.getAnalysis("http://"+temp, this);
                         }
                     }
 

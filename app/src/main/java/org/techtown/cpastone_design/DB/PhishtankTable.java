@@ -20,6 +20,11 @@ public class PhishtankTable extends DBModel{
         db.execSQL(query);
     }
 
+    public void deleteAll(){
+        String query = String.format("DELETE FROM %s", TABLE_NAME);
+        db.execSQL(query);
+    }
+
     public ArrayList<PhishtankTableList> selectAll(){
         Cursor phishtank_table_cursor = db.rawQuery(String.format("SELECT * FROM %s", TABLE_NAME), null);
         ArrayList<PhishtankTableList> return_data = makePhishTankList(phishtank_table_cursor);
