@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Notification;
@@ -43,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private static String CHANNEL_ID = "channel1";
     private NotificationManager notificationManager;
     private static int NOTIFICATION_ID = 0;
-    LinearLayout linearLayout;
+    RecyclerVierAdapter adapter;
+
+    DataMovie data;
 
 
     // 권한 리스트 (일단 문자만)
@@ -63,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkPermission();
 
-        linearLayout = findViewById(R.id.linearLayout);
-
+        init();
 
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
@@ -78,8 +81,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void createTextView(String string){
+    private void init(){
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerVierAdapter();
+        recyclerView.setAdapter(adapter);
+    }
+
+
+    private void createmsg(String string, JSONObject res) throws JSONException {
+
+        data = new DataMovie(string, res);
+        adapter.addItem(data);
+
+        /*
         //1. 텍스트뷰 객체생성
         TextView textView = new TextView(getApplicationContext());
 
@@ -92,8 +110,10 @@ public class MainActivity extends AppCompatActivity {
         //4. 텍스트뷰 글자타입 설정
         //textViewNm.setTypeface(null, Typeface.BOLD);
 
-        //5. 텍스트뷰 ID설정
-        textView.setId(0);
+        //5. 텍스트뷰 ID설정 & 같은 index에 json정보 저장
+        textView.setId(arraymsg.size());
+        System.out.println(arraymsg.size());
+        arrayJson.add(res);
 
         //6. 레이아웃 설정
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
@@ -111,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
         // 7. 설정한 레이아웃 텍스트뷰에 적용
         textView.setLayoutParams(param);
 
-        //9. 생성및 설정된 텍스트뷰 레이아웃에 적용
-        linearLayout.addView(textView);
+         */
 
     }
 
@@ -130,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 List<String> url = checkUrl(string);
 
                 if(url.isEmpty()){
-                    createTextView("NO URL");
+                    Log.d("msg","msg is null");
                 }
                 else{
                     for(int i=0; i < url.size() ; i++){
@@ -144,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    createTextView(res.getString("detail"));
-                    //res.getInt("is_
+                    createmsg(string, res);
 
                 }
             }
