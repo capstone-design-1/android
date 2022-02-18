@@ -61,6 +61,26 @@ public class Api {
         return response_json[0];
     }
 
+    public JSONArray getSearchData(int limit) throws InterruptedException, JSONException {
+        String API_URL = String.format("http://13.124.101.242:8080/search/all?limit=%d", limit);
+        final JSONArray[] response_json = new JSONArray[1];
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Thread(){
+            public void run() {
+                try {
+                    response_json[0] = parseArrayData(API_URL);
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+                latch.countDown();
+            }
+        }.start();
+        latch.await();
+
+        return response_json[0];
+    }
+
     public boolean syncDB(Context context) throws InterruptedException, JSONException {
         String API_URL = "http://13.124.101.242:8080/db/sync";
         final JSONObject[] response_json = new JSONObject[1];
@@ -148,6 +168,27 @@ public class Api {
 
             return return_data;
         }
+    }
+
+    public JSONArray parseArrayData(String request_url) throws IOException, JSONException {
+        URL obj = new URL(request_url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Accept", "application/json");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        con.disconnect();
+
+        JSONArray response_json = null;
+        response_json = new JSONArray(sb.toString());
+        return response_json;
     }
     
     // DB에 결과 저장
