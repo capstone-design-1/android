@@ -30,6 +30,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     Api api = new Api();
+    String unique_id = UUID.randomUUID().toString();
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -155,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            res = api.getAnalysis(temp, this);
+                            res = api.getAnalysis(temp, unique_id);
                         }
                         else{
-                            res = api.getAnalysis("http://"+temp, this);
+                            res = api.getAnalysis("http://"+temp, unique_id);
                         }
                     }
 
