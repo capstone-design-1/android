@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/iv_movie"
+            android:id="@+id/url_img"
             android:scaleType="centerCrop"
             android:layout_width="100dp"
             android:layout_height="80dp"/>
@@ -31,7 +31,7 @@
 
     <ImageView
         android:visibility="gone"
-        android:id="@+id/iv_movie2"
+        android:id="@+id/url_img2"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="200dp"/>

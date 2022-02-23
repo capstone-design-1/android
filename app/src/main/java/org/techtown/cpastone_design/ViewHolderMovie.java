@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ViewHolderMovie extends  RecyclerView.ViewHolder {
 
     TextView tv_movie_title, iv_mal;
-    ImageView iv_movie,iv_movie2;
+    ImageView url_img,url_img2;
     LinearLayout linearlayout;
 
     OnViewHolderItemClickListener onViewHolderItemClickListener;
@@ -22,11 +22,11 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
     public ViewHolderMovie(@NonNull View itemView) {
         super(itemView);
 
-        iv_movie = itemView.findViewById(R.id.iv_movie);
+        url_img = itemView.findViewById(R.id.url_img);
         tv_movie_title = itemView.findViewById(R.id.tv_movie_title);
         iv_mal = itemView.findViewById(R.id.iv_mal);
 
-        //iv_movie2 = itemView.findViewById(R.id.iv_movie2);
+        url_img2 = itemView.findViewById(R.id.url_img2);
         linearlayout = itemView.findViewById(R.id.linearlayout);
 
         linearlayout.setOnClickListener(new View.OnClickListener() {
@@ -40,8 +40,8 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
     public void onBind(DataMovie data,int position, SparseBooleanArray selectedItems){
         tv_movie_title.setText(data.getTitle());
         iv_mal.setText(data.getMalicious());
-        //iv_movie.setImageResource(data.getImage());
-        //iv_movie2.setImageResource(data.getImage());
+        url_img.setImageBitmap(data.getImage());
+        url_img2.setImageBitmap(data.getImage());
         changeVisibility(selectedItems.get(position));
     }
 
@@ -53,13 +53,15 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                /*
+
+
                 // imageView의 높이 변경
-                iv_movie2.getLayoutParams().height = (int) animation.getAnimatedValue();
-                iv_movie2.requestLayout();
+                url_img2.getLayoutParams().height = (int) animation.getAnimatedValue();
+                url_img2.requestLayout();
                 // imageView가 실제로 사라지게하는 부분
-                iv_movie2.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                 */
+                url_img2.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+
                 iv_mal.getLayoutParams().height = (int) animation.getAnimatedValue();
                 iv_mal.requestLayout();
                 iv_mal.setVisibility(isExpanded ? View.VISIBLE : View.GONE);

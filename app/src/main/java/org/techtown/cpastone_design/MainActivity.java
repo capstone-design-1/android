@@ -44,9 +44,6 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String CHANNEL_ID = "channel1";
-    private NotificationManager notificationManager;
-    private static int NOTIFICATION_ID = 0;
     RecyclerVierAdapter adapter;
     Context context = this;
 
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void createmsg(String string, JSONObject res) throws JSONException {
+    private void createmsg(String string, JSONObject res) throws JSONException, IOException {
 
         data = new DataMovie(string, res);
         adapter.addItem(data);

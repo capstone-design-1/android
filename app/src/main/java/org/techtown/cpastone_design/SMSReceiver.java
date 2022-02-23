@@ -15,8 +15,18 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -29,6 +39,9 @@ public class SMSReceiver extends BroadcastReceiver {
     private NotificationManager notificationManager;
     private static int NOTIFICATION_ID = 0;
 
+    Api api = new Api();
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         // 문자 오면 onReceive() 가 호출이 됨
@@ -59,8 +72,21 @@ public class SMSReceiver extends BroadcastReceiver {
 
              */
 
-            sendNotification(context, contents);
-            sendToActivity(context, contents);
+            try {
+                if(IsMalicious(context, contents) == true) {
+                    sendNotification(context, contents);
+                }
+                else{
+                    Log.d("IsMalicious","안위험함");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //sendToActivity(context, contents);
 
         }
     }
@@ -136,5 +162,67 @@ public class SMSReceiver extends BroadcastReceiver {
         notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
 
+    // url 정규식
+    // http 랑 www 없이 성공함!
+    public static List<String> checkUrl(String content){
+        try {
+            String[] content_arr = content.split(" ");
+
+            String REGEX = "^*((http|https)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?";
+            Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
+            List<String> list = new ArrayList<>();
+
+            Matcher m = p.matcher(content);
+            while(m.find()){
+                list.add(m.group());
+            }
+
+            return list;
+        } catch (Exception e) {
+            List<String> no = null;
+            System.out.println(e.toString());
+            return no;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Boolean IsMalicious(Context context, String string) throws InterruptedException, JSONException, IOException {
+        JSONObject res = null;
+        if(string == null) {
+            // null 예외처리 해야 동작하는듯
+            Log.d("receive data", "string is null");
+        }
+        else{
+            Log.d("receive data", string);
+            List<String> url = checkUrl(string);
+
+            if(url.isEmpty()){
+                Log.d("msg","msg is null");
+                return false;
+            }
+            else{
+                for(int i=0; i < url.size() ; i++){
+                    String temp = url.get(i);
+                    Log.d("TEMP", temp);
+                    if(temp.startsWith("http") || temp.startsWith("https")){
+                        res = api.getAnalysis(temp, context);
+                    }
+                    else{
+                        res = api.getAnalysis("http://"+temp, context);
+                    }
+                }
+                if (res.getInt("is_malicious") == 1) {
+                    Log.d("res result", "1");
+                    return true;
+                }
+                else{
+                    Log.d("res result", "0");
+                    return false;
+                }
+            }
+
+        }
+        return false;
+    }
 
 }
