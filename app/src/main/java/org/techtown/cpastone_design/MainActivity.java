@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerVierAdapter adapter;
-    Context context = this;
+    DeviceInfo device_info = new DeviceInfo();
 
     DataMovie data;
 
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     Api api = new Api();
-    String unique_id = UUID.randomUUID().toString();
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -80,27 +80,27 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
-
-        ImageButton btn = (ImageButton) findViewById(R.id.syncBtn);
-        btn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                try {
-                    boolean result = api.syncDB(context);
-                    if(result == true){
-                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 성공했습니다.", Toast.LENGTH_SHORT);
-                        myToast.show();
-                    }else{
-                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 실패했습니다.", Toast.LENGTH_SHORT);
-                        myToast.show();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        // 동기화 버튼 기능
+//        ImageButton btn = (ImageButton) findViewById(R.id.syncBtn);
+//        btn.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    boolean result = api.syncDB(context);
+//                    if(result == true){
+//                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 성공했습니다.", Toast.LENGTH_SHORT);
+//                        myToast.show();
+//                    }else{
+//                        Toast myToast = Toast.makeText(context.getApplicationContext(),"동기화를 실패했습니다.", Toast.LENGTH_SHORT);
+//                        myToast.show();
+//                    }
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
 
     }
@@ -180,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
                         String temp = url.get(i);
                         Log.d("TEMP", temp);
                         if(temp.startsWith("http") || temp.startsWith("https")){
-                            res = api.getAnalysis(temp, unique_id);
+                            res = api.getAnalysis(temp, device_info.getDeviceId(this));
                         }
                         else{
-                            res = api.getAnalysis("http://"+temp, unique_id);
+                            res = api.getAnalysis("http://"+temp, device_info.getDeviceId(this));
                         }
                     }
 

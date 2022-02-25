@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class SMSReceiver extends BroadcastReceiver {
 
     private static final String TAG = "SmsReceiver";
-
+    DeviceInfo device_info = new DeviceInfo();
     //mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     private static String CHANNEL_ID = "channel1";
     private NotificationManager notificationManager;
@@ -205,10 +206,10 @@ public class SMSReceiver extends BroadcastReceiver {
                     String temp = url.get(i);
                     Log.d("TEMP", temp);
                     if(temp.startsWith("http") || temp.startsWith("https")){
-                        res = api.getAnalysis(temp, context);
+                        res = api.getAnalysis(temp, device_info.getDeviceId(context));
                     }
                     else{
-                        res = api.getAnalysis("http://"+temp, context);
+                        res = api.getAnalysis("http://"+temp, device_info.getDeviceId(context));
                     }
                 }
                 if (res.getInt("is_malicious") == 1) {
