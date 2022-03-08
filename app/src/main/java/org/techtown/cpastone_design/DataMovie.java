@@ -21,8 +21,9 @@ public class DataMovie {
 
     public DataMovie(String title, JSONObject res) throws JSONException, IOException {
         //this.image = image;
+        System.out.println("데이터 전송 : " + res);
         this.title = title;
-        int temp = res.getInt("is_malicious");
+        int temp = res.getInt("malicious");
         if(temp == 0){
             this.malicious = "무해함";
         }

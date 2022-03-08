@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     Api api = new Api();
 
+    public static Context mContext;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -70,12 +72,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkPermission();
 
-        init();
+        mContext = this;
 
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
         try {
-
             processIntent(passedIntent);
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
@@ -115,6 +116,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+
+    private void ten_msg() {
+        JSONArray ten = null;
+        try {
+            ten = api.getSearchData(10,device_info.getDeviceId(this));
+            for(int i = 0; i < ten.length(); i++){
+                JSONObject temp = ten.getJSONObject(i);
+                createmsg(temp.getString("previous_url"), temp);
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private void createmsg(String string, JSONObject res) throws JSONException, IOException {
 
@@ -161,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
+        init();
+        ten_msg();
+        /*
         JSONObject res = null;
         if(intent != null){
             // null 예외처리 해야 동작하는듯
@@ -193,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+        */
     }
 
     // (2) 이미 실행된 상태였는데 리시버에 의해 다시 켜진 경우
@@ -201,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         try {
+
             processIntent(intent);
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();

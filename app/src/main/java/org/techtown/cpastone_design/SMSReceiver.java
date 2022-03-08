@@ -33,6 +33,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class SMSReceiver extends BroadcastReceiver {
 
+
+
     private static final String TAG = "SmsReceiver";
     DeviceInfo device_info = new DeviceInfo();
     //mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -46,6 +48,8 @@ public class SMSReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 문자 오면 onReceive() 가 호출이 됨
+
+        ((MainActivity)MainActivity.mContext).onNewIntent(intent);
 
         createNotificationChannel(context);
         Bundle bundle = intent.getExtras();
