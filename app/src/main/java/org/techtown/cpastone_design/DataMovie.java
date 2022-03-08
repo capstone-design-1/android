@@ -43,7 +43,7 @@ public class DataMovie {
 
                     InputStream is = conn.getInputStream(); //inputStream 값 가져오기
                     image = BitmapFactory.decodeStream(is); // Bitmap으로 반환
-                    Log.d("IMAGE","업로드 성공함");
+                    
 
                 } catch (MalformedURLException | JSONException e) {
                     e.printStackTrace();
