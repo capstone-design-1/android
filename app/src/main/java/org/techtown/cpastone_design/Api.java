@@ -1,6 +1,5 @@
 package org.techtown.cpastone_design;
 
-import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -8,20 +7,12 @@ import androidx.annotation.RequiresApi;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.techtown.cpastone_design.DB.GoogleTable;
-import org.techtown.cpastone_design.DB.MalwaresTable;
-import org.techtown.cpastone_design.DB.PhishtankTable;
-import org.techtown.cpastone_design.DB.UrlTable;
-import org.techtown.cpastone_design.DB.UrlTableList;
-import org.techtown.cpastone_design.DB.VirustotalTable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 
@@ -139,34 +130,23 @@ public class Api {
         con.setRequestProperty("Accept", "application/json");
         int response_code = con.getResponseCode();
 
-        if (response_code == 200 || response_code == 400){
-            BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                sb.append(line);
-            }
-            rd.close();
-            con.disconnect();
-
-            JSONObject response_json = null;
-            response_json = new JSONObject(sb.toString());
-            response_json.put("status_code", response_code);
-            return response_json;
-
-            // How to Use
-            // https://codechacha.com/ko/how-to-parse-json-in-android/
-            // responseJson.getJSONObject("virustotal").getString("harmless")
+        BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
         }
-        else{
-            System.out.println("[!] api server down.");
+        rd.close();
+        con.disconnect();
 
-            JSONObject return_data = new JSONObject();
-            return_data.put("error", "api server down");
-            return_data.put("status_code", response_code);
+        JSONObject response_json = null;
+        response_json = new JSONObject(sb.toString());
+        response_json.put("status_code", response_code);
+        return response_json;
 
-            return return_data;
-        }
+        // How to Use
+        // https://codechacha.com/ko/how-to-parse-json-in-android/
+        // responseJson.getJSONObject("virustotal").getString("harmless")
     }
 
     public JSONArray parseArrayData(String request_url) throws IOException, JSONException {

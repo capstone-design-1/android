@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -71,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
+
+        Uri url = getIntent().getData();
+        if(url != null){
+            Intent intent = new Intent(MainActivity.this, Deeplink.class);
+            intent.putExtra("url", url.toString());
+            startActivity(intent);
+            return;
+        }
 
         mContext = this;
 
