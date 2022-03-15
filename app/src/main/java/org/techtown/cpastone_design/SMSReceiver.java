@@ -33,6 +33,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class SMSReceiver extends BroadcastReceiver {
 
+
+
     private static final String TAG = "SmsReceiver";
     DeviceInfo device_info = new DeviceInfo();
     //mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -46,6 +48,8 @@ public class SMSReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 문자 오면 onReceive() 가 호출이 됨
+
+        //((MainActivity)MainActivity.mContext).onNewIntent(intent);
 
         createNotificationChannel(context);
         Bundle bundle = intent.getExtras();
@@ -143,7 +147,7 @@ public class SMSReceiver extends BroadcastReceiver {
     // Notification Builder를 만드는 메소드
     private NotificationCompat.Builder getNotificationBuilder(Context context, String str) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("string",str);
+        //intent.putExtra("string",str);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)

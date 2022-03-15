@@ -21,8 +21,9 @@ public class DataMovie {
 
     public DataMovie(String title, JSONObject res) throws JSONException, IOException {
         //this.image = image;
+        System.out.println("데이터 전송 : " + res);
         this.title = title;
-        int temp = res.getInt("is_malicious");
+        int temp = res.getInt("malicious");
         if(temp == 0){
             this.malicious = "무해함";
         }
@@ -42,7 +43,7 @@ public class DataMovie {
 
                     InputStream is = conn.getInputStream(); //inputStream 값 가져오기
                     image = BitmapFactory.decodeStream(is); // Bitmap으로 반환
-                    Log.d("IMAGE","업로드 성공함");
+                    
 
                 } catch (MalformedURLException | JSONException e) {
                     e.printStackTrace();

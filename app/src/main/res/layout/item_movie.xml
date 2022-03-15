@@ -5,6 +5,7 @@
     android:id="@+id/linearlayout"
     android:orientation="vertical"
     android:background="@drawable/round"
+    android:layout_margin="10dp"
     >
 
 
