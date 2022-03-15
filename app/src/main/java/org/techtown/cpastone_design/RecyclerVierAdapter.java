@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class RecyclerVierAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // adapter에 들어갈 list 입니다.
-    private ArrayList<DataMovie> listData = new ArrayList<>();
+    private ArrayList<MsgList> listData = new ArrayList<>();
 
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -24,7 +24,7 @@ public class RecyclerVierAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new ViewHolderMovie(view);
     }
 
@@ -58,7 +58,7 @@ public class RecyclerVierAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return listData.size();
     }
 
-    void addItem(DataMovie data) {
+    void addItem(MsgList data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
     }

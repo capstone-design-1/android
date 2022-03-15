@@ -3,35 +3,17 @@ package org.techtown.cpastone_design;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -40,9 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerVierAdapter adapter;
     DeviceInfo device_info = new DeviceInfo();
 
-    DataMovie data;
+    MsgList data;
 
 
     // 권한 리스트 (일단 문자만)
@@ -83,13 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
 
+        init();
+        ten_msg();
+
+        /*
         // (1) 리시버에 의해 해당 액티비티가 새롭게 실행된 경우
         Intent passedIntent = getIntent();
-        try {
-            processIntent(passedIntent);
-        } catch (IOException | InterruptedException | JSONException e) {
-            e.printStackTrace();
-        }
+
+        Log.d("new", "액티비티가 새롭게 실행된 경우");
+        processIntent(passedIntent);
+
         // 동기화 버튼 기능
 //        ImageButton btn = (ImageButton) findViewById(R.id.syncBtn);
 //        btn.setOnClickListener(new View.OnClickListener(){
@@ -111,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-
+*/
 
     }
 
@@ -147,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createmsg(String string, JSONObject res) throws JSONException, IOException {
 
-        data = new DataMovie(string, res);
+        data = new MsgList(string, res);
         adapter.addItem(data);
 
         /*
@@ -189,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void processIntent(Intent intent) throws IOException, InterruptedException, JSONException {
+    public void processIntent(Intent intent)  {
         init();
         ten_msg();
         /*
@@ -227,22 +210,19 @@ public class MainActivity extends AppCompatActivity {
         }
         */
     }
+    /*
 
     // (2) 이미 실행된 상태였는데 리시버에 의해 다시 켜진 경우
     // (이러한 경우 onCreate()를 거치지 않기 때문에 이렇게 오버라이드 해주어야 모든 경우에 SMS문자가 처리된다!
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onNewIntent(Intent intent) {
-        try {
-
-            processIntent(intent);
-        } catch (IOException | InterruptedException | JSONException e) {
-            e.printStackTrace();
-        }
+        Log.d("reload", "다시켜진 경우");
+        processIntent(intent);
 
         super.onNewIntent(intent);
     }
-
+*/
 
     public void checkPermission(){
 
@@ -300,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
             return list;
         } catch (Exception e) {
             List<String> no = new ArrayList<>();
-            System.out.println(e.toString());
             return no;
         }
     }

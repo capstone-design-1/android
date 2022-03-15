@@ -14,14 +14,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class DataMovie {
+public class MsgList {
     String malicious;
     String title;
     Bitmap image;
 
-    public DataMovie(String title, JSONObject res) throws JSONException, IOException {
+    public MsgList(String title, JSONObject res) throws JSONException, IOException {
         //this.image = image;
-        System.out.println("데이터 전송 : " + res);
         this.title = title;
         int temp = res.getInt("malicious");
         if(temp == 0){
@@ -34,7 +33,7 @@ public class DataMovie {
             @Override
             public void run(){
                 try {
-                    Log.d("IMAGE", res.getString("site_image"));
+
                     URL imgUrl = new URL("http://13.124.101.242:8080"+res.getString("site_image"));
 
                     HttpURLConnection conn = (HttpURLConnection)imgUrl.openConnection();

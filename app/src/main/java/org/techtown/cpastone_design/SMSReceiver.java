@@ -49,8 +49,6 @@ public class SMSReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // 문자 오면 onReceive() 가 호출이 됨
 
-        //((MainActivity)MainActivity.mContext).onNewIntent(intent);
-
         createNotificationChannel(context);
         Bundle bundle = intent.getExtras();
 
@@ -84,6 +82,13 @@ public class SMSReceiver extends BroadcastReceiver {
                 else{
                     Log.d("IsMalicious","안위험함");
                 }
+                Log.d("onReceive", "문자오면 호출");
+                //실시간 새로고침
+                Intent getintent = ((MainActivity)MainActivity.mContext).getIntent();
+                ((MainActivity)MainActivity.mContext).finish();
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0,0);
+                ((MainActivity)MainActivity.mContext).startActivity(getintent);
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0,0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -185,7 +190,6 @@ public class SMSReceiver extends BroadcastReceiver {
             return list;
         } catch (Exception e) {
             List<String> no = null;
-            System.out.println(e.toString());
             return no;
         }
     }
