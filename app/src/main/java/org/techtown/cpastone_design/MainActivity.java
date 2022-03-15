@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
+
+        Uri url = getIntent().getData();
+        if(url != null){
+            Intent intent = new Intent(MainActivity.this, Deeplink.class);
+            intent.putExtra("url", url.toString());
+            startActivity(intent);
+            return;
+        }
 
         mContext = this;
 
