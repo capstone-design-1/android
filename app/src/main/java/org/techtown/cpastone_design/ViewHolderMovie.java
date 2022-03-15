@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewHolderMovie extends  RecyclerView.ViewHolder {
 
-    TextView tv_movie_title, iv_mal;
+    TextView url, malicious;
     ImageView url_img,url_img2;
     LinearLayout linearlayout;
 
@@ -23,8 +23,8 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
         super(itemView);
 
         url_img = itemView.findViewById(R.id.url_img);
-        tv_movie_title = itemView.findViewById(R.id.tv_movie_title);
-        iv_mal = itemView.findViewById(R.id.iv_mal);
+        url = itemView.findViewById(R.id.url);
+        malicious = itemView.findViewById(R.id.malicious);
 
         url_img2 = itemView.findViewById(R.id.url_img2);
         linearlayout = itemView.findViewById(R.id.linearlayout);
@@ -37,9 +37,9 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
         });
     }
 
-    public void onBind(DataMovie data,int position, SparseBooleanArray selectedItems){
-        tv_movie_title.setText(data.getTitle());
-        iv_mal.setText(data.getMalicious());
+    public void onBind(MsgList data, int position, SparseBooleanArray selectedItems){
+        url.setText(data.getTitle());
+        malicious.setText(data.getMalicious());
         url_img.setImageBitmap(data.getImage());
         url_img2.setImageBitmap(data.getImage());
         changeVisibility(selectedItems.get(position));
@@ -62,9 +62,9 @@ public class ViewHolderMovie extends  RecyclerView.ViewHolder {
                 url_img2.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
 
-                iv_mal.getLayoutParams().height = (int) animation.getAnimatedValue();
-                iv_mal.requestLayout();
-                iv_mal.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                malicious.getLayoutParams().height = (int) animation.getAnimatedValue();
+                malicious.requestLayout();
+                malicious.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             }
         });
         // Animation start
